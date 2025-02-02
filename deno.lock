@@ -1,7 +1,13 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@std/path@^1.0.8": "1.0.8",
     "npm:discord.js@^14.17.3": "14.17.3"
+  },
+  "jsr": {
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
+    }
   },
   "npm": {
     "@discordjs/builders@1.10.0": {
@@ -138,6 +144,13 @@
   "workspace": {
     "dependencies": [
       "npm:discord.js@^14.17.3"
-    ]
+    ],
+    "members": {
+      "src/commands": {
+        "dependencies": [
+          "jsr:@std/path@^1.0.8"
+        ]
+      }
+    }
   }
 }

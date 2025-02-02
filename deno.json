@@ -23,5 +23,8 @@
     "proseWrap": "preserve",
     "include": ["src/"],
     "exclude": ["src/testdata/", "src/fixtures/**/*.ts"]
-  }
+	},
+	"workspace": [
+		"./src/commands/"
+	]
 }

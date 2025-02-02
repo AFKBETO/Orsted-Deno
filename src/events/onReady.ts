@@ -1,15 +1,18 @@
 import { Client, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
-import { botDevId, looperId } from '../../config/channels.ts';
-
+import { channels, commands } from '@orsted/commands';
 
 export async function onReady(client: Client): Promise<void> {
-	try {
-		const rest = new REST().setToken(config.bot_token);
-		await rest.put(
-			Routes.applicationGuildCommands(client.user?.id || 'missing_id', config.guild_id),
-			{ body: [] },
-		);
+    try {
+        const { botDevId, looperId } = channels;
+        const rest = new REST().setToken(config.bot_token);
+        await rest.put(
+            Routes.applicationGuildCommands(
+                client.user?.id || 'missing_id',
+                config.guild_id,
+            ),
+            { body: commands.map((command) => command.data.toJSON()) },
+        );
 
 		console.log('Discord ready!');
 		if (config.environment === 'production') {
