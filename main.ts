@@ -10,12 +10,12 @@ import { onInteraction } from './src/events/onInteraction.ts';
 if (import.meta.main) {
     const client = new Client({ intents: intents, partials: partials });
 
-	client.on('error', errorHandler);
+    client.on('error', errorHandler);
     client.once(Events.ClientReady, onReady);
-	client
-		.on('debug', console.error)
-		.on('warn', console.error);
-	client.on(Events.InteractionCreate, onInteraction);
+    client.on(Events.InteractionCreate, onInteraction);
+    client
+        .on('debug', console.error)
+        .on('warn', console.error);
 
     client.login(config.bot_token);
 }

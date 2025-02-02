@@ -1,28 +1,28 @@
 {
-  "tasks": {
-    "dev": "deno run --allow-env --allow-read --allow-net --env-file --watch=config/,src/ main.ts"
-  },
-  "imports": {
-    "discord.js": "npm:discord.js@^14.17.3",
-  },
-  "lint": {
-    "include": ["src/**/*.ts", "config/**/*.ts"],
-    "exclude": ["src/testdata/", "src/fixtures/**/*.ts"],
-    "rules": {
-      "tags": ["recommended"],
-      "include": [],
-      "exclude": []
-    }
-  },
-  "fmt": {
-    "useTabs": false,
-    "lineWidth": 80,
-    "indentWidth": 4,
-    "semiColons": true,
-    "singleQuote": true,
-    "proseWrap": "preserve",
-    "include": ["src/"],
-    "exclude": ["src/testdata/", "src/fixtures/**/*.ts"]
+	"tasks": {
+		"dev": "deno run --allow-env --allow-read --allow-net --env-file --watch=config/,src/ main.ts"
+	},
+	"imports": {
+		"discord.js": "npm:discord.js@^14.17.3",
+	},
+	"lint": {
+		"include": ["**/*.ts"],
+		"exclude": [],
+		"rules": {
+			"tags": ["recommended"],
+			"include": [],
+			"exclude": []
+		}
+	},
+	"fmt": {
+		"useTabs": false,
+		"lineWidth": 80,
+		"indentWidth": 4,
+		"semiColons": true,
+		"singleQuote": true,
+		"proseWrap": "preserve",
+		"include": ["**/*.ts"],
+		"exclude": []
 	},
 	"workspace": [
 		"./src/commands/"

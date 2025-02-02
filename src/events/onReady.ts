@@ -14,13 +14,17 @@ export async function onReady(client: Client): Promise<void> {
             { body: commands.map((command) => command.data.toJSON()) },
         );
 
-		console.log('Discord ready!');
-		if (config.environment === 'production') {
-			await (client.channels.cache.get(looperId) as TextChannel).send(`${client.user} has started another loop!`);
-		} else {
-			await (client.channels.cache.get(botDevId) as TextChannel).send(`${client.user} has started another experiment!`);
-		}
-	} catch (error) {
-		console.error(error);
-	}
+        console.log('Discord ready!');
+        if (config.environment === 'production') {
+            await (client.channels.cache.get(looperId) as TextChannel).send(
+                `${client.user} has started another loop!`,
+            );
+        } else {
+            await (client.channels.cache.get(botDevId) as TextChannel).send(
+                `${client.user} has started another experiment!`,
+            );
+        }
+    } catch (error) {
+        console.error(error);
+    }
 }
