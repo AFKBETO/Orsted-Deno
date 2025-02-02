@@ -1,0 +1,3 @@
+[submodule "src/commands"]
+	path = src/commands
+	url = https://github.com/AFKBETO/Orsted-Commands
