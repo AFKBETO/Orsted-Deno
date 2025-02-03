@@ -1,9 +1,12 @@
 import { Client, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
 import { channels, commands } from '@orsted/commands';
+import { Collection } from 'discord.js';
 
 export async function onReady(client: Client): Promise<void> {
     try {
+        client.cooldowns = new Collection();
+
         const { botDevId, looperId } = channels;
         const rest = new REST().setToken(config.bot_token);
         await rest.put(
