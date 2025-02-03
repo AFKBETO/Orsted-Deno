@@ -1,3 +1,4 @@
+import '@orsted/utils';
 import { Client, Events } from 'discord.js';
 import { config } from './config/config.ts';
 import { intents } from './config/intentOptions.ts';
