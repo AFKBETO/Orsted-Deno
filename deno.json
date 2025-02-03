@@ -25,6 +25,7 @@
 		"exclude": []
 	},
 	"workspace": [
-		"./src/commands/"
+		"./src/commands/",
+		"./src/shared/",
 	]
 }
