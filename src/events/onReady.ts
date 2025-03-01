@@ -1,6 +1,11 @@
 import { Client, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
-import { channels, commands } from '@orsted/commands';
+import {
+    channels,
+    messageContextCommands,
+    slashCommands,
+    userContextCommands,
+} from '@orsted/commands';
 import { Collection } from 'discord.js';
 
 export async function onReady(client: Client): Promise<void> {
@@ -8,13 +13,24 @@ export async function onReady(client: Client): Promise<void> {
         client.cooldowns = new Collection();
 
         const { botDevId, looperId } = channels;
+        const commandData = [
+            ...slashCommands.values(),
+            ...userContextCommands.values(),
+            ...messageContextCommands.values(),
+        ];
+
         const rest = new REST().setToken(config.bot_token);
         await rest.put(
             Routes.applicationGuildCommands(
                 client.user?.id || 'missing_id',
                 config.guild_id,
             ),
-            { body: commands.map((command) => command.data.toJSON()) },
+            {
+                body: commandData.map((command) => {
+                    client.cooldowns.set(command.data.name, new Collection());
+                    return command.data.toJSON();
+                }),
+            },
         );
 
         console.log('Discord ready!');
