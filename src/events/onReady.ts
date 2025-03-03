@@ -34,7 +34,7 @@ export async function onReady(client: Client): Promise<void> {
             },
         );
 
-		await connectDatabase();
+        await connectDatabase();
 
         console.log('Discord ready!');
         if (config.environment === 'production') {
