@@ -7,6 +7,7 @@ import {
     userContextCommands,
 } from '@orsted/commands';
 import { Collection } from 'discord.js';
+import { connectDatabase } from '@orsted/utils';
 
 export async function onReady(client: Client): Promise<void> {
     try {
@@ -32,6 +33,8 @@ export async function onReady(client: Client): Promise<void> {
                 }),
             },
         );
+
+		await connectDatabase();
 
         console.log('Discord ready!');
         if (config.environment === 'production') {
