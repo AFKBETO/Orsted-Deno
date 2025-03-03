@@ -1,10 +1,9 @@
-import { Collection, Interaction, InteractionType } from 'discord.js';
+import { Interaction, InteractionType } from 'discord.js';
 import {
     messageContextCommands,
     slashCommands,
     userContextCommands,
 } from '@orsted/commands';
-import { BotCommand } from '@orsted/utils';
 
 const defaultCooldownDuration = 3;
 
@@ -32,22 +31,44 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
         return;
     }
 
-    const commandList: Collection<string, BotCommand> =
-        interaction.isChatInputCommand()
-            ? slashCommands
-            : (interaction.isUserContextMenuCommand()
-                ? userContextCommands
-                : messageContextCommands);
+    let cooldownAmount = 0;
 
-    const command = commandList.find((cmd) =>
-        cmd.data.name === interaction.commandName
-    );
-
-    if (!command) {
-        throw new Error(`Command ${interaction.commandName} not found.`);
+    if (interaction.isChatInputCommand()) {
+        const command = slashCommands.get(interaction.commandName);
+        if (!command) {
+            console.error(
+                `No command matching ${interaction.commandName} was found.`,
+            );
+            return;
+        }
+        cooldownAmount = command.cooldown ?? defaultCooldownDuration;
+        await command.execute(interaction);
     }
-    await command.execute(interaction);
-    const cooldownAmount = command.cooldown ?? defaultCooldownDuration;
+
+    if (interaction.isMessageContextMenuCommand()) {
+        const command = messageContextCommands.get(interaction.commandName);
+        if (!command) {
+            console.error(
+                `No command matching ${interaction.commandName} was found.`,
+            );
+            return;
+        }
+        cooldownAmount = command.cooldown ?? defaultCooldownDuration;
+        await command.execute(interaction);
+    }
+
+    if (interaction.isUserContextMenuCommand()) {
+        const command = userContextCommands.get(interaction.commandName);
+        if (!command) {
+            console.error(
+                `No command matching ${interaction.commandName} was found.`,
+            );
+            return;
+        }
+        cooldownAmount = command.cooldown ?? defaultCooldownDuration;
+        await command.execute(interaction);
+    }
+
     const cooldownTimestamp = now + cooldownAmount * 1_000;
 
     timestamps.set(interaction.user.id, cooldownTimestamp);
