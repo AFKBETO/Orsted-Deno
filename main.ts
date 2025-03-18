@@ -6,7 +6,7 @@ import { partials } from './config/partialOptions.ts';
 import { onReady } from './src/events/onReady.ts';
 import { errorHandler } from './src/utils/errorHandler.ts';
 import { onInteraction } from './src/events/onInteraction.ts';
-import { connectDatabase } from '@orsted/commands';
+import { connectDatabase } from '@orsted/utils';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
