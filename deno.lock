@@ -2,6 +2,7 @@
   "version": "4",
   "specifiers": {
     "jsr:@std/path@^1.0.8": "1.0.8",
+    "npm:discord.js@*": "14.17.3",
     "npm:discord.js@^14.17.3": "14.17.3",
     "npm:mongoose@^8.9.6": "8.12.1"
   },
@@ -244,7 +245,7 @@
   },
   "workspace": {
     "dependencies": [
-      "npm:discord.js@14.17.3"
+      "npm:discord.js@^14.17.3"
     ],
     "members": {
       "src/commands": {
