@@ -246,6 +246,11 @@
     "members": {
       "src/commands": {
         "dependencies": [
+          "jsr:@std/path@^1.0.8"
+        ]
+      },
+      "src/shared": {
+        "dependencies": [
           "jsr:@std/path@^1.0.8",
           "npm:mongoose@^8.9.6"
         ]
