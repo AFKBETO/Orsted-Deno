@@ -2,21 +2,31 @@ import { Client, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
 import {
     channels,
+    generateAnimeCommands,
     messageContextCommands,
     slashCommands,
     userContextCommands,
 } from '@orsted/commands';
 import { Collection } from 'discord.js';
-import { connectDatabase } from '@orsted/utils';
+import { getAnimeData } from '@orsted/utils';
 
 export async function onReady(client: Client): Promise<void> {
     try {
         client.cooldowns = new Collection();
 
         const { botDevId, looperId } = channels;
+
         client.slashCommands = slashCommands.clone();
         client.userContextCommands = userContextCommands.clone();
         client.messageContextCommands = messageContextCommands.clone();
+
+        const animeList = await getAnimeData();
+        console.log('generate commands for anime:');
+        for (const animeCommand of generateAnimeCommands(animeList)) {
+            console.log(animeCommand.data.name);
+            client.slashCommands.set(animeCommand.data.name, animeCommand);
+        }
+
         const commandData = [
             ...client.slashCommands.values(),
             ...client.userContextCommands.values(),
@@ -24,6 +34,10 @@ export async function onReady(client: Client): Promise<void> {
         ];
 
         const rest = new REST().setToken(config.bot_token);
+        await rest.put(
+            Routes.applicationCommands(client.user?.id || 'missing_id'),
+            { body: [] },
+        );
         await rest.put(
             Routes.applicationGuildCommands(
                 client.user?.id || 'missing_id',
@@ -36,8 +50,6 @@ export async function onReady(client: Client): Promise<void> {
                 }),
             },
         );
-
-        await connectDatabase();
 
         console.log('Discord ready!');
         if (config.environment === 'production') {
