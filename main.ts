@@ -8,6 +8,7 @@ import { errorHandler } from './src/utils/errorHandler.ts';
 import { onInteraction } from './src/events/onInteraction.ts';
 import { connectDatabase } from '@orsted/utils';
 import { onReactionAdd } from './src/events/onReactionAdd.ts';
+import { onInviteCreate } from './src/events/onInviteCreate.ts';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
@@ -19,6 +20,7 @@ if (import.meta.main) {
     client.once(Events.ClientReady, onReady);
     client.on(Events.InteractionCreate, onInteraction);
     client.on(Events.MessageReactionAdd, onReactionAdd);
+    client.on(Events.InviteCreate, onInviteCreate);
     client
         .on('debug', console.error)
         .on('warn', console.error);
