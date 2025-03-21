@@ -1,9 +1,4 @@
 import { Interaction, InteractionType } from 'discord.js';
-import {
-    messageContextCommands,
-    slashCommands,
-    userContextCommands,
-} from '@orsted/commands';
 
 const defaultCooldownDuration = 3;
 
@@ -11,7 +6,12 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
     if (interaction.type !== InteractionType.ApplicationCommand) {
         return;
     }
-    const { cooldowns } = interaction.client;
+    const {
+        cooldowns,
+        slashCommands,
+        messageContextCommands,
+        userContextCommands,
+    } = interaction.client;
 
     const timestamps = cooldowns.get(interaction.commandName);
 

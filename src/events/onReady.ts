@@ -14,10 +14,13 @@ export async function onReady(client: Client): Promise<void> {
         client.cooldowns = new Collection();
 
         const { botDevId, looperId } = channels;
+        client.slashCommands = slashCommands.clone();
+        client.userContextCommands = userContextCommands.clone();
+        client.messageContextCommands = messageContextCommands.clone();
         const commandData = [
-            ...slashCommands.values(),
-            ...userContextCommands.values(),
-            ...messageContextCommands.values(),
+            ...client.slashCommands.values(),
+            ...client.userContextCommands.values(),
+            ...client.messageContextCommands.values(),
         ];
 
         const rest = new REST().setToken(config.bot_token);
