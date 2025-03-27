@@ -1,0 +1,14 @@
+.git/
+
+.env*
+
+.gitignore
+.gitmodules
+
+LICENSE
+README.md
+
+*_test.*
+
+build/
+
