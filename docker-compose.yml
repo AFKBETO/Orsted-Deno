@@ -6,6 +6,7 @@ services:
       ORSTED_MONGO_URI: ${ORSTED_MONGO_URI}
       ORSTED_BOT_TOKEN: ${ORSTED_BOT_TOKEN}
       ORSTED_GUILD_ID: ${ORSTED_GUILD_ID}
+      ORSTED_ENVIRONMENT: ${ORSTED_ENVIRONMENT}
     image: orsted-${COMMIT}
     restart: always
     pull_policy: always
