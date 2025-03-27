@@ -13,3 +13,18 @@ services:
       context: .
       dockerfile: Dockerfile
       no_cache: true
+    depends_on:
+      - dragonvault
+
+
+  dragonvault:
+    container_name: dragonvault
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/data:/data/db

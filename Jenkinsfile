@@ -10,6 +10,8 @@ pipeline {
 				ORSTED_MONGO_URI = credentials('ORSTED_MONGO_URI')
 				ORSTED_BOT_TOKEN = credentials('ORSTED_BOT_TOKEN')
 				ORSTED_GUILD_ID = credentials('ORSTED_MONGO_URI')
+				MONGO_INITDB_ROOT_USERNAME = credentials('MONGO_INITDB_ROOT_USERNAME')
+				MONGO_INITDB_ROOT_PASSWORD = credentials('MONGO_INITDB_ROOT_PASSWORD')
 			}
 
 			steps {
