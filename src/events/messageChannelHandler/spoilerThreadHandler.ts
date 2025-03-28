@@ -21,7 +21,7 @@ async function onCollectButton(
     interaction: ButtonInteraction,
     thread: ThreadChannel,
     user: User,
-) {
+): Promise<void> {
     try {
         if (interaction.user.id !== user.id) {
             interaction.reply({
@@ -66,7 +66,7 @@ async function onCollectButton(
     }
 }
 
-async function createThreadForSeries(message: Message) {
+async function createThreadForSeries(message: Message): Promise<void> {
     const hasEmbed = message.embeds.length > 0;
 
     let name = `${message.author.displayName}'s Link`;
