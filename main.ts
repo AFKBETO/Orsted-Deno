@@ -10,6 +10,7 @@ import { connectDatabase } from '@orsted/utils';
 import { onReactionAdd } from './src/events/onReactionAdd.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
 import { onGuildMemberAdd } from './src/events/onGuildMemberAdd.ts';
+import { onMessageCreate } from './src/events/onMessageCreate.ts';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
@@ -21,6 +22,7 @@ if (import.meta.main) {
     client.once(Events.ClientReady, onReady);
     client.on(Events.InteractionCreate, onInteraction);
     client.on(Events.MessageReactionAdd, onReactionAdd);
+    client.on(Events.MessageCreate, onMessageCreate);
     client.on(Events.InviteCreate, onInviteCreate);
     client.on(
         Events.GuildMemberAdd,
