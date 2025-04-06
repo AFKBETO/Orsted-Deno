@@ -17,4 +17,11 @@ export async function onInviteCreate(invite: Invite): Promise<void> {
         await invite.delete();
         return;
     }
+    if (invite.maxAge === 0) {
+        await guildMember.send(
+            'You are not allowed to create invite with limited expiration time. Please contact the server owner if you need one.',
+        );
+        await invite.delete();
+        return;
+    }
 }
