@@ -82,13 +82,17 @@ async function createThreadForSeries(message: Message): Promise<void> {
         reason: 'Auto create thread',
     });
 
-    const renameButton = new ButtonBuilder().setCustomId('rename').setLabel(
-        'Rename',
-    ).setStyle(ButtonStyle.Primary).setEmoji('823978760860598382');
+    const renameButton = new ButtonBuilder()
+        .setCustomId('rename')
+        .setLabel('Rename')
+        .setStyle(ButtonStyle.Primary)
+        .setEmoji('823978760860598382');
 
-    const deleteButton = new ButtonBuilder().setCustomId('delete').setLabel(
-        'Delete',
-    ).setStyle(ButtonStyle.Secondary).setEmoji('904933664100581436');
+    const deleteButton = new ButtonBuilder()
+        .setCustomId('delete')
+        .setLabel('Delete')
+        .setStyle(ButtonStyle.Secondary)
+        .setEmoji('904933664100581436');
 
     const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
         renameButton,
