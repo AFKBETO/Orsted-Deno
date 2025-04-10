@@ -11,7 +11,7 @@ import { onReactionAdd } from './src/events/onReactionAdd.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
 import { onGuildMemberAdd } from './src/events/onGuildMemberAdd.ts';
 import { onMessageCreate } from './src/events/onMessageCreate.ts';
-import { getConfigData } from '@orsted/utils';
+import { getConfigData, Utils } from '@orsted/utils';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
@@ -21,10 +21,11 @@ if (import.meta.main) {
     if (!botConfig) {
         throw new Error('No config data found');
     }
+    console.log('Config data fetched successfully.');
 
     const client = new Client({ intents: intents, partials: partials });
     client.botConfig = botConfig;
-    console.log('Config data fetched successfully.');
+    Utils.initializeClientUtils(client);
 
     client.on('error', errorHandler);
     client.once(Events.ClientReady, onReady);
