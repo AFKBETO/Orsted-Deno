@@ -11,12 +11,20 @@ import { onReactionAdd } from './src/events/onReactionAdd.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
 import { onGuildMemberAdd } from './src/events/onGuildMemberAdd.ts';
 import { onMessageCreate } from './src/events/onMessageCreate.ts';
+import { getConfigData } from '@orsted/utils';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
-    const client = new Client({ intents: intents, partials: partials });
-
     await connectDatabase();
+    console.log('Fetching config data...');
+    const botConfig = await getConfigData();
+    if (!botConfig) {
+        throw new Error('No config data found');
+    }
+
+    const client = new Client({ intents: intents, partials: partials });
+    client.botConfig = botConfig;
+    console.log('Config data fetched successfully.');
 
     client.on('error', errorHandler);
     client.once(Events.ClientReady, onReady);

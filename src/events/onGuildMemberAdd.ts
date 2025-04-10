@@ -1,5 +1,4 @@
 import { Client, EmbedBuilder, GuildMember, TextChannel } from 'discord.js';
-import { channels } from '@orsted/commands';
 import { createInviteData } from '@orsted/utils';
 
 export async function onGuildMemberAdd(client: Client, member: GuildMember) {
@@ -17,7 +16,7 @@ export async function onGuildMemberAdd(client: Client, member: GuildMember) {
 
     const result = await createInviteData(invite.code, user.id, member.id);
     const logChannel = await client.channels.fetch(
-        channels.logsId,
+        client.botConfig.logsId,
     ) as TextChannel;
     if (result === null) {
         await logChannel.send(
@@ -38,7 +37,7 @@ export async function onGuildMemberAdd(client: Client, member: GuildMember) {
     await logChannel.send({ embeds: [logEmbed] });
 
     const councilChannel = await client.channels.fetch(
-        channels.councilId,
+        client.botConfig.councilId,
     ) as TextChannel;
     const councilEmbed = new EmbedBuilder()
         .setAuthor({

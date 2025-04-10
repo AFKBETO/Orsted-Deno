@@ -1,7 +1,6 @@
 import { Client, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
 import {
-    channels,
     generateAnimeCommands,
     messageContextCommands,
     slashCommands,
@@ -14,7 +13,7 @@ export async function onReady(client: Client): Promise<void> {
     try {
         client.cooldowns = new Collection();
 
-        const { botDevId, looperId } = channels;
+        const { botDevId, looperId } = client.botConfig;
 
         client.slashCommands = slashCommands.clone();
         client.userContextCommands = userContextCommands.clone();
