@@ -27,7 +27,7 @@ if (import.meta.main) {
     client.on('error', errorHandler);
     client.on('warn', (message) => console.error('warn', message));
     client.botConfig = botConfig;
-    Utils.initializeClientUtils(client);
+    await Utils.initializeClientUtils(client);
     if (config.environment !== 'production') {
         client.on('debug', (message) => console.error('debug', message));
     }
