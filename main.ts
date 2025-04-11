@@ -24,10 +24,13 @@ if (import.meta.main) {
     console.log('Config data fetched successfully.');
 
     const client = new Client({ intents: intents, partials: partials });
+    client.on('error', errorHandler);
+    client.on('warn', (message) => console.error('warn', message));
     client.botConfig = botConfig;
     Utils.initializeClientUtils(client);
-
-    client.on('error', errorHandler);
+    if (config.environment !== 'production') {
+        client.on('debug', (message) => console.error('debug', message));
+    }
     client.once(Events.ClientReady, onReady);
     client.on(Events.InteractionCreate, onInteraction);
     client.on(Events.MessageReactionAdd, onReactionAdd);
@@ -37,9 +40,5 @@ if (import.meta.main) {
         Events.GuildMemberAdd,
         async (member) => await onGuildMemberAdd(client, member),
     );
-    client
-        .on('debug', console.error)
-        .on('warn', console.error);
-
     client.login(config.bot_token);
 }
