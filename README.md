@@ -2,7 +2,7 @@
 A Discord bot project using Deno
 
 ## Prerequisites
-1. Deno 2.2.3 or higher
+1. Deno 2.2.9 or higher
 - Install Deno: https://deno.land/#installation
 2. MongoDB database
 3. A Discord bot
