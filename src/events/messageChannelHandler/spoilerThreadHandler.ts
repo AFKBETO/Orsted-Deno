@@ -67,70 +67,82 @@ async function onCollectButton(
 }
 
 async function createThreadForSeries(message: Message): Promise<void> {
-    const hasEmbed = message.embeds.length > 0;
+    try {
+        const hasEmbed = message.embeds.length > 0;
 
-    let name = `${message.author.displayName}'s Link`;
-    let topic = `${message.content}`;
-    if (hasEmbed) {
-        name = message.embeds[0].title ?? name;
-        topic = message.embeds[0].title ?? topic;
+        let name = `${message.author.displayName}'s Link`;
+        let topic = `${message.content}`;
+        if (hasEmbed) {
+            name = message.embeds[0].title ?? name;
+            topic = message.embeds[0].title ?? topic;
+        }
+
+        const thread = await message.startThread({
+            name: name,
+            autoArchiveDuration: 1440,
+            reason: 'Auto create thread',
+        });
+
+        const renameButton = new ButtonBuilder()
+            .setCustomId('rename')
+            .setLabel('Rename')
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('823978760860598382');
+
+        const deleteButton = new ButtonBuilder()
+            .setCustomId('delete')
+            .setLabel('Delete')
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji('904933664100581436');
+
+        const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+            renameButton,
+            deleteButton,
+        );
+
+        const botMessage = await thread.send({
+            content:
+                `A thread has been created to discuss about ${topic}. You can choose the buttons below to rename or delete this thread during the next 10 minutes.`,
+            components: [row],
+        });
+
+        const collector = botMessage.createMessageComponentCollector({
+            componentType: ComponentType.Button,
+        });
+
+        collector.on(
+            'collect',
+            async (interaction) =>
+                await onCollectButton(interaction, thread, message.author),
+        );
+
+        setTimeout(async () => {
+            try {
+                await botMessage.delete();
+            } catch (error) {
+                console.error(new Date(), 'Error deleting bot message', error);
+            }
+        }, BOT_MESSAGE_DELETE_AFTER_IN_MS);
+    } catch (error) {
+        console.error(new Date(), 'Error creating thread', error);
     }
-
-    const thread = await message.startThread({
-        name: name,
-        autoArchiveDuration: 1440,
-        reason: 'Auto create thread',
-    });
-
-    const renameButton = new ButtonBuilder()
-        .setCustomId('rename')
-        .setLabel('Rename')
-        .setStyle(ButtonStyle.Primary)
-        .setEmoji('823978760860598382');
-
-    const deleteButton = new ButtonBuilder()
-        .setCustomId('delete')
-        .setLabel('Delete')
-        .setStyle(ButtonStyle.Secondary)
-        .setEmoji('904933664100581436');
-
-    const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
-        renameButton,
-        deleteButton,
-    );
-
-    const botMessage = await thread.send({
-        content:
-            `A thread has been created to discuss about ${topic}. You can choose the buttons below to rename or delete this thread during the next 10 minutes.`,
-        components: [row],
-    });
-
-    const collector = botMessage.createMessageComponentCollector({
-        componentType: ComponentType.Button,
-    });
-
-    collector.on(
-        'collect',
-        async (interaction) =>
-            await onCollectButton(interaction, thread, message.author),
-    );
-
-    setTimeout(async () => {
-        await botMessage.delete();
-    }, BOT_MESSAGE_DELETE_AFTER_IN_MS);
 }
 
 export async function spoilerThreadHandler(message: Message) {
-    const isAuthorNotMod = !message.member?.permissions.has(
-        PermissionFlagsBits.ManageChannels,
-    );
-
-    if (!Utils.isValidURL(message.content) && isAuthorNotMod) {
-        await message.author.send(
-            `Hey ${message.author.username}, please only post links in the spoiler channel.\nI have deleted your message.\nThank you!`,
+    try {
+        const isAuthorNotMod = !message.member?.permissions.has(
+            PermissionFlagsBits.ManageChannels,
         );
-        await message.delete();
-        return;
+
+        if (!Utils.isValidURL(message.content) && isAuthorNotMod) {
+            await message.author.send(
+                `Hey ${message.author.username}, please only post links in the spoiler channel.\nI have deleted your message.\nThank you!`,
+            );
+            await message.delete();
+            return;
+        }
+        setTimeout(async () => await createThreadForSeries(message), 3000);
+    } catch (error) {
+        console.error(new Date(), 'Error in spoiler thread handler', error);
     }
-    setTimeout(async () => await createThreadForSeries(message), 3000);
 }
