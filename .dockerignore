@@ -12,3 +12,6 @@ README.md
 
 build/
 
+Dockerfile
+.dockerignore
+docker-compose*
