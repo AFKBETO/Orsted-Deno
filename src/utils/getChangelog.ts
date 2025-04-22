@@ -11,7 +11,6 @@ export async function getChangelog(): Promise<string> {
     let changeLogText = `Version ${version}\n` + '```md\n';
     let isNotCurrentVersion = true;
     for (const line of changelogLines) {
-        console.log(line);
         if (line.startsWith(`## [${version}]`)) {
             isNotCurrentVersion = false;
         } else if (isNotCurrentVersion) {
