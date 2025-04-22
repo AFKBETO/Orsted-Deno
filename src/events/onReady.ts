@@ -1,4 +1,4 @@
-import { Client, REST, Routes, TextChannel } from 'discord.js';
+import { Client, Collection, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
 import {
     generateAnimeCommands,
@@ -6,14 +6,14 @@ import {
     slashCommands,
     userContextCommands,
 } from '@orsted/commands';
-import { Collection } from 'discord.js';
-import { getAnimeData } from '@orsted/utils';
+import { getAnimeData, updateVersion } from '@orsted/utils';
+import { getChangelog } from '../utils/getChangelog.ts';
 
 export async function onReady(client: Client): Promise<void> {
     try {
         client.cooldowns = new Collection();
 
-        const { botDevId, looperId } = client.botConfig;
+        const { botDevId, looperId, changelogChannelId } = client.botConfig;
 
         client.slashCommands = slashCommands.clone();
         client.userContextCommands = userContextCommands.clone();
@@ -59,6 +59,16 @@ export async function onReady(client: Client): Promise<void> {
             await (client.channels.cache.get(botDevId) as TextChannel).send(
                 `${client.user} has started another experiment!`,
             );
+        }
+
+        if (client.botConfig.version !== config.version) {
+            const changelogText = await getChangelog();
+            const changelogChannel = client.channels.cache.get(
+                changelogChannelId,
+            ) as TextChannel;
+
+            await changelogChannel.send(changelogText);
+            await updateVersion(config.version);
         }
     } catch (error) {
         console.error(error);
