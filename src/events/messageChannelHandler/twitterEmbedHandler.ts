@@ -22,7 +22,10 @@ export async function twitterEmbedHandler(message: Message): Promise<void> {
             /(www\.){0,1}(x|twitter)\.com/,
             twitterEmbedLink,
         );
-        await message.reply({ content: newLink });
+        await message.reply({
+            content: newLink,
+            allowedMentions: { repliedUser: false },
+        });
         await message.suppressEmbeds(true);
     } catch (error) {
         console.error(new Date(), 'Error in twitterEmbedHandler:', error);
