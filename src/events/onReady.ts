@@ -63,12 +63,19 @@ export async function onReady(client: Client): Promise<void> {
 
         if (client.botConfig.version !== config.version) {
             const changelogText = await getChangelog();
-            const changelogChannel = client.channels.cache.get(
-                changelogChannelId,
-            ) as TextChannel;
+            if (config.environment === 'production') {
+                const changelogChannel = client.channels.cache.get(
+                    changelogChannelId,
+                ) as TextChannel;
 
-            await changelogChannel.send(changelogText);
-            await updateVersion(config.version);
+                await changelogChannel.send(changelogText);
+                await updateVersion(config.version);
+            } else {
+                const changelogChannel = client.channels.cache.get(
+                    botDevId,
+                ) as TextChannel;
+                await changelogChannel.send(changelogText);
+            }
         }
     } catch (error) {
         console.error(error);
