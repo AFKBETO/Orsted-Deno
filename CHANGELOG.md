@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 - Bot will automatically send changelogs to the changelog channel when a new version is released.
 
+### Changed
+
+### Fixed
+
 ## [3.1.2] - 2025-04-06
 
 ### Added
