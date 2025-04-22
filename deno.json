@@ -1,7 +1,7 @@
 {
 	"tasks": {
 		"dev": "deno run --allow-env --allow-read --allow-net --allow-sys --env-file --watch=config/,src/ main.ts",
-		"prod": "deno run --allow-env --allow-read='/deno-dir/node_modules,/node_modules,src/,**/CHANGELOG.md' --allow-sys='osRelease' --deny-read='/.dockerenv' --allow-net main.ts",
+		"prod": "deno run --allow-env --allow-read='/deno-dir/node_modules,/node_modules,src/,CHANGELOG.md' --allow-sys='osRelease' --deny-read='/.dockerenv' --allow-net main.ts",
 		"build": "deno compile --check --allow-env --allow-read --allow-net --allow-sys --output=build/Orsted.exe main.ts"
 	},
 	"imports": {
