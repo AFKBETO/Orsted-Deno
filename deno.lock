@@ -252,6 +252,7 @@
   },
   "workspace": {
     "dependencies": [
+      "jsr:@std/path@^1.0.8",
       "npm:discord.js@^14.17.3"
     ],
     "members": {

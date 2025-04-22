@@ -1,13 +1,19 @@
+import * as path from '@std/path';
 import { config } from '../../config/config.ts';
 export async function getChangelog(): Promise<string> {
-    const changelog = await Deno.readTextFile('../../CHANGELOG.md');
+    const filePath = path.join(
+        import.meta.dirname || '.',
+        '../../CHANGELOG.md',
+    );
+    const changelog = await Deno.readTextFile(filePath);
     const changelogLines = changelog.split('\n');
     const version = config.version;
     let changeLogText = `Version ${version}\n` + '```md\n';
-    let isNotCurrentVersion = false;
+    let isNotCurrentVersion = true;
     for (const line of changelogLines) {
+        console.log(line);
         if (line.startsWith(`## [${version}]`)) {
-            isNotCurrentVersion = true;
+            isNotCurrentVersion = false;
         } else if (isNotCurrentVersion) {
             continue;
         } else if (line.startsWith('## [')) {
