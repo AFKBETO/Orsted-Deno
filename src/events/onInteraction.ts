@@ -1,4 +1,6 @@
 import { Interaction, InteractionType } from 'discord.js';
+import { commands } from '@orsted/commands';
+import { isSlashCommand } from '../shared/utils/typeguard.ts';
 
 const defaultCooldownDuration = 3;
 
@@ -32,6 +34,16 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
     }
 
     let cooldownAmount = 0;
+    const command = commands.get(interaction.commandName);
+    if (!command) {
+        console.error(
+            `No command matching ${interaction.commandName} was found.`,
+        );
+        return;
+    }
+    if (isSlashCommand(command)) {
+        command.execute(interaction);
+    }
 
     if (interaction.isChatInputCommand()) {
         const command = slashCommands.get(interaction.commandName);
