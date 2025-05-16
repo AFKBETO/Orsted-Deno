@@ -1,11 +1,6 @@
 import { Client, Collection, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
-import {
-    generateAnimeCommands,
-    messageContextCommands,
-    slashCommands,
-    userContextCommands,
-} from '@orsted/commands';
+import { commands, generateAnimeCommands } from '@orsted/commands';
 import { getAnimeData, updateVersion } from '@orsted/utils';
 import { getChangelog } from '../utils/getChangelog.ts';
 
@@ -15,21 +10,17 @@ export async function onReady(client: Client): Promise<void> {
 
         const { botDevId, looperId, changelogChannelId } = client.botConfig;
 
-        client.slashCommands = slashCommands.clone();
-        client.userContextCommands = userContextCommands.clone();
-        client.messageContextCommands = messageContextCommands.clone();
+        client.commands = commands.clone();
 
         const animeList = await getAnimeData();
         console.log('generate commands for anime:');
         for (const animeCommand of generateAnimeCommands(animeList)) {
             console.log(animeCommand.data.name);
-            client.slashCommands.set(animeCommand.data.name, animeCommand);
+            client.commands.set(animeCommand.data.name, animeCommand);
         }
 
         const commandData = [
-            ...client.slashCommands.values(),
-            ...client.userContextCommands.values(),
-            ...client.messageContextCommands.values(),
+            ...client.commands.values(),
         ];
 
         const rest = new REST().setToken(config.bot_token);
