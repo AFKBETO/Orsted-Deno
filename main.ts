@@ -14,6 +14,15 @@ import { connectDatabase, getConfigData, Utils } from '@orsted/utils';
 
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
+    self.addEventListener('error', (event) => {
+        errorHandler(event.error);
+        event.preventDefault();
+    });
+
+    self.addEventListener('unhandledrejection', (event) => {
+        errorHandler(event.reason);
+        event.preventDefault();
+    });
     await connectDatabase();
     console.log('Fetching config data...');
     const botConfig = await getConfigData();
