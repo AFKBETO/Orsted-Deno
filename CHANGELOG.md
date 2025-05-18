@@ -3,6 +3,17 @@ All notable changes to this project will be documented in this file.
  
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [3.2.1] - 2025-04-22
+
+### Added
+
+### Changed
+
+### Fixed
+
+- Fixed a bug where ``/match`` sends user Id instead of user name
+
+
 ## [3.2.0] - 2025-04-22
 
 ### Added
