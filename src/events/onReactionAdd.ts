@@ -1,5 +1,5 @@
 import { MessageReaction, PartialMessageReaction } from 'discord.js';
-import { getHosData } from '@orsted/utils';
+import { getHosData } from '@orsted/utils/database';
 
 const hosReactIcon = '814457607720796212';
 

@@ -1,5 +1,5 @@
 import { Client, EmbedBuilder, GuildMember, TextChannel } from 'discord.js';
-import { createInviteData } from '@orsted/utils';
+import { createInviteData } from '@orsted/utils/database';
 
 export async function onGuildMemberAdd(client: Client, member: GuildMember) {
     const guild = member.guild;

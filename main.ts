@@ -1,4 +1,4 @@
-import '@orsted/utils';
+import '@orsted/utils/extensions';
 import { Client, Events } from 'discord.js';
 import { config } from './config/config.ts';
 import { intents } from './config/intentOptions.ts';
@@ -10,15 +10,14 @@ import { onReactionAdd } from './src/events/onReactionAdd.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
 import { onGuildMemberAdd } from './src/events/onGuildMemberAdd.ts';
 import { onMessageCreate } from './src/events/onMessageCreate.ts';
-import { connectDatabase, getConfigData, Utils } from '@orsted/utils';
-
+import { connectDatabase, getConfigData } from '@orsted/utils/database';
+import { initializeClientUtils } from '@orsted/utils';
 // Learn more at https://docs.deno.com/runtime/manual/examples/module_metadata#concepts
 if (import.meta.main) {
     self.addEventListener('error', (event) => {
         errorHandler(event.error);
         event.preventDefault();
     });
-
     self.addEventListener('unhandledrejection', (event) => {
         errorHandler(event.reason);
         event.preventDefault();
@@ -30,12 +29,11 @@ if (import.meta.main) {
         throw new Error('No config data found');
     }
     console.log('Config data fetched successfully.');
-
     const client = new Client({ intents: intents, partials: partials });
     client.on('error', errorHandler);
     client.on('warn', (message) => console.error('warn', message));
     client.botConfig = botConfig;
-    await Utils.initializeClientUtils(client);
+    await initializeClientUtils(client);
     if (config.environment !== 'production') {
         client.on('debug', (message) => console.error('debug', message));
     }

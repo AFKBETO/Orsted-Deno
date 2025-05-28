@@ -13,7 +13,7 @@ import {
     ThreadChannel,
     User,
 } from 'discord.js';
-import { Utils } from '@orsted/utils';
+import { isValidURL } from '@orsted/utils';
 
 const BOT_MESSAGE_DELETE_AFTER_IN_MS = 10 * 60 * 1000;
 
@@ -134,7 +134,7 @@ export async function spoilerThreadHandler(message: Message) {
             PermissionFlagsBits.ManageChannels,
         );
 
-        if (!Utils.isValidURL(message.content) && isAuthorNotMod) {
+        if (!isValidURL(message.content) && isAuthorNotMod) {
             await message.author.send(
                 `Hey ${message.author.username}, please only post links in the spoiler channel.\nI have deleted your message.\nThank you!`,
             );

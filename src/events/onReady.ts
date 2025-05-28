@@ -1,7 +1,7 @@
 import { Client, Collection, REST, Routes, TextChannel } from 'discord.js';
 import { config } from '../../config/config.ts';
 import { commands, generateAnimeCommands } from '@orsted/commands';
-import { getAnimeData, updateVersion } from '@orsted/utils';
+import { getAnimeData, updateVersion } from '@orsted/utils/database';
 import { getChangelog } from '../tools/getChangelog.ts';
 
 export async function onReady(client: Client): Promise<void> {

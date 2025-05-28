@@ -1,8 +1,10 @@
 import { Interaction, InteractionType } from 'discord.js';
-import { Utils } from '@orsted/utils';
-
+import {
+    isMessageContextMenuCommand,
+    isSlashCommand,
+    isUserContextMenuCommand,
+} from '@orsted/utils';
 const defaultCooldownDuration = 3;
-
 export async function onInteraction(interaction: Interaction): Promise<void> {
     if (interaction.type !== InteractionType.ApplicationCommand) {
         return;
@@ -11,13 +13,10 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
         cooldowns,
         commands,
     } = interaction.client;
-
     const timestamps = cooldowns.get(interaction.commandName);
-
     if (!timestamps) {
         throw new Error(`Command ${interaction.commandName} not found.`);
     }
-
     const now = Date.now();
     const expirationTime = timestamps.get(interaction.user.id) ?? 0;
     if (now < expirationTime) {
@@ -29,7 +28,6 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
         });
         return;
     }
-
     let cooldownAmount = 0;
     const command = commands.get(interaction.commandName);
     if (!command) {
@@ -38,25 +36,23 @@ export async function onInteraction(interaction: Interaction): Promise<void> {
         );
         return;
     }
-    const isSlashCommand = Utils.isSlashCommand(command) &&
+    const isInteractionSlashCommand = isSlashCommand(command) &&
         interaction.isChatInputCommand();
-    if (isSlashCommand) {
+    if (isInteractionSlashCommand) {
         await command.execute(interaction);
     }
-    const isUserCommand = Utils.isUserContextMenuCommand(command) &&
+    const isInteractionUserCommand = isUserContextMenuCommand(command) &&
         interaction.isUserContextMenuCommand();
-    if (isUserCommand) {
+    if (isInteractionUserCommand) {
         await command.execute(interaction);
     }
-    const isMessageCommand = Utils.isMessageContextMenuCommand(command) &&
+    const isInteractionMessageCommand = isMessageContextMenuCommand(command) &&
         interaction.isMessageContextMenuCommand();
-    if (isMessageCommand) {
+    if (isInteractionMessageCommand) {
         await command.execute(interaction);
     }
-
     cooldownAmount = command.cooldown ?? defaultCooldownDuration;
     const cooldownTimestamp = now + cooldownAmount * 1_000;
-
     timestamps.set(interaction.user.id, cooldownTimestamp);
     setTimeout(() => timestamps.delete(interaction.user.id), cooldownAmount);
 }
