@@ -9,7 +9,6 @@ export async function onGuildMemberAdd(client: Client, member: GuildMember) {
     const invite = invites.find((invite) =>
         invite.uses !== 0 && invite.maxUses === 0 && invite.maxAge !== 0
     );
-    console.log(invite);
     if (invite === undefined) return;
 
     const user = await guild.members.fetch(invite.inviterId!);
