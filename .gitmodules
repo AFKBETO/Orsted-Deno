@@ -4,6 +4,3 @@
 [submodule "src/utils"]
 	path = src/utils
 	url = https://github.com/AFKBETO/Orsted-Utils.git
-[submodule "src/types"]
-	path = src/types
-	url = https://github.com/AFKBETO/Orsted-Types.git
