@@ -1,6 +1,6 @@
 [submodule "src/commands"]
 	path = src/commands
 	url = https://github.com/AFKBETO/Orsted-Commands
-[submodule "src/shared"]
-	path = src/shared
+[submodule "src/utils"]
+	path = src/utils
 	url = https://github.com/AFKBETO/Orsted-Utils.git

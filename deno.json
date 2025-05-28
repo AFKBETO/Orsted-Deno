@@ -35,6 +35,6 @@
 	},
 	"workspace": [
 		"./src/commands/",
-		"./src/shared/"
+		"./src/utils/"
 	]
 }
