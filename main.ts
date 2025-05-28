@@ -4,7 +4,7 @@ import { config } from './config/config.ts';
 import { intents } from './config/intentOptions.ts';
 import { partials } from './config/partialOptions.ts';
 import { onReady } from './src/events/onReady.ts';
-import { errorHandler } from './src/utils/errorHandler.ts';
+import { errorHandler } from './src/tools/errorHandler.ts';
 import { onInteraction } from './src/events/onInteraction.ts';
 import { onReactionAdd } from './src/events/onReactionAdd.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
