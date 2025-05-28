@@ -35,6 +35,7 @@
 	},
 	"workspace": [
 		"./src/commands/",
+		"./src/types/",
 		"./src/utils/"
 	]
 }
