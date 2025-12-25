@@ -1,0 +1,18 @@
+services:
+  orsted:
+    container_name: orsted
+    environment:
+      ORSTED_VERSION: ${ORSTED_VERSION}
+      ORSTED_MONGO_URI: ${ORSTED_MONGO_URI}
+      ORSTED_BOT_TOKEN: ${ORSTED_BOT_TOKEN}
+      ORSTED_GUILD_ID: ${ORSTED_GUILD_ID}
+      ORSTED_ENVIRONMENT: ${ORSTED_ENVIRONMENT}
+    image: ${REGISTRY_IMAGE}
+    restart: always
+    pull_policy: always
+
+networks:
+  default:
+    external: true
+    name: nginx-network
+

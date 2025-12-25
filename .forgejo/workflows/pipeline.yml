@@ -1,0 +1,89 @@
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: docker
+    outputs:
+      image_tag: ${{ steps.build.outputs.image_tag }}
+      orsted_version: ${{ steps.prebuild.outputs.git_tag }}
+
+    steps:
+      - name: Checkout the repository
+        uses: https://data.forgejo.org/actions/checkout@v6
+        with:
+          github-server-url: https://github.com
+          repository: AFKBETO/Orsted-Deno
+          token: ${{ secrets.GITHUBPAT }}
+          fetch-depth: 0
+          submodules: recursive
+          clean: true
+
+      - name: Login to registry
+        shell: bash
+        run: |
+          echo ${{ secrets.CONTAINER_PAT }} | docker login -u ${{ secrets.CONTAINER_USER }} --password-stdin ${{ secrets.REGISTRY }}
+
+      - name: Prebuild
+        id: pre-build
+        shell: bash
+        run: |
+          echo "sha_short=$(git rev-parse --short HEAD)" >> $FORGEJO_OUTPUT
+          echo "git_tag=$(git describe --tags --abbrev=0)" >> $FORGEJO_OUTPUT
+      
+      - name: Build Dockerfile and push
+        id: build
+        env:
+          IMAGE_NAME: orsted
+          TAG: ${{ forgejo.ref_name == 'main' && 'latest' || (startsWith(forgejo.ref, 'ref/tags') && forgejo.ref_name || format('{0}-{1}', forgejo.ref_name, steps.pre-build.outputs.sha_short) ) }}
+        shell: bash
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG} .
+          docker push ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG}
+          echo "image_tag=${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG}" >> $FORGEJO_OUTPUT
+      
+      - name: Postbuild
+        shell: bash
+        run: |
+          echo "Image built is ${{ steps.build.outputs.image_tag }}"
+
+      - name: Cleanup
+        shell: bash
+        if: always()
+        run: |
+          docker logout ${{ secrets.REGISTRY }}
+
+  deploy:
+    runs-on: production
+    needs:
+      - build
+    steps:
+      - name: Checkout docker-compose
+        uses: https://data.forgejo.org/actions/checkout@v6
+        with:
+          sparse-checkout: |
+            docker-compose.yml
+          sparse-checkout-cone-mode: false
+
+      - name: Login to registry
+        shell: bash
+        run: |
+          echo ${{ secrets.CONTAINER_PAT }} | docker login -u ${{ secrets.CONTAINER_USER }} --password-stdin ${{ secrets.REGISTRY }}
+
+      - name: Deploy
+        shell: bash
+        env:
+          ORSTED_VERSION: ${{ needs.build.outputs.orsted_version }}
+          ORSTED_MONGO_URI: ${{ secrets.ORSTED_MONGO_URI }}
+          ORSTED_BOT_TOKEN: ${{ secrets.ORSTED_BOT_TOKEN }}
+          ORSTED_GUILD_ID: ${{ secrets.ORSTED_GUILD_ID }}
+          ORSTED_ENVIRONMENT: production
+          REGISTRY_IMAGE: ${{ needs.build.outputs.image_tag }}
+        run: |
+          docker compose up -d
+
+      - name: Cleanup
+        shell: bash
+        if: always()
+        run: |
+          docker logout ${{ secrets.REGISTRY }}
