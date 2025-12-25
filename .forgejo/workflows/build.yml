@@ -17,6 +17,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUBPAT }}
         run: |
+          gh auth login --hostname github.com --with-token <<< $GH_TOKEN
           git submodule update --init --recursive
 
       - name: Login to registry
