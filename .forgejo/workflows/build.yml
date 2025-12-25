@@ -17,22 +17,19 @@ jobs:
           clean: true
 
       - name: Login to registry
-        uses: https://github.com/docker/login-action@v3
-        with:
-          registry: ${{ secrets.REGISTRY }}
-          username: ${{ secret.CONTAINER_USER }}
-          password: ${{ secrets.CONTAINER_PASSWORD }}
+        shell: bash
+        run: |
+          echo ${{ secrets.CONTAINER_PAT }} | docker login -u ${{ secrets.CONTAINER_USER }} --password-stdin ${{ secrets.REGISTRY }}
 
-      - name: Set up QEMU
-        uses: https://github.com/docker/setup-qemu-action@v3
-      - name: Set up Docker Buildx
-        uses: https://github.com/docker/setup-buildx-action@v3
 
       - name: Build Dockerfile and push
-        uses: https://github.com/docker/build-push-action@v6
-        with:
-          tags: ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/orsted:latest
-          push: true
+        env:
+          IMAGE_NAME: orsted
+          TAG: latest
+        shell: bash
+        run: |
+          docker build -t ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG} .
+          docker push ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG}
 
       - name: Cleanup
         shell: bash
