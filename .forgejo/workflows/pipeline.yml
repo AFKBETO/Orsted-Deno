@@ -35,7 +35,7 @@ jobs:
         id: build
         env:
           IMAGE_NAME: orsted
-          TAG: ${{ forgejo.ref_name == 'main' && 'latest' || (startsWith(forgejo.ref, 'ref/tags') && forgejo.ref_name || format('{0}-{1}', forgejo.ref_name, steps.pre-build.outputs.sha_short) ) }}
+          TAG: ${{ forgejo.ref_name == 'main' && 'latest' || (startsWith(forgejo.ref, 'refs/tags') && forgejo.ref_name || format('{0}-{1}', forgejo.ref_name, steps.pre-build.outputs.sha_short) ) }}
         shell: bash
         run: |
           docker build -t ${{ secrets.REGISTRY }}/${{ secrets.OWNER }}/${IMAGE_NAME}:${TAG} .
