@@ -9,8 +9,9 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: https://data.forgejo.org/actions/checkout@v6
+        env:
+          GH_TOKEN: ${{ secrets.GITHUBPAT }}
         with:
-          token: ${{ secrets.GITHUBPAT }}
           submodules: recursive
           clean: true
 
@@ -34,10 +35,3 @@ jobs:
         if: always()
         run: |
           docker logout ${{ secrets.REGISTRY }}
-
-
-          
-          
-          
-          
-
