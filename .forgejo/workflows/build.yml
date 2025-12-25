@@ -9,11 +9,15 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: https://data.forgejo.org/actions/checkout@v6
+        with:
+          clean: true
+
+      - name: Checkout submodules
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUBPAT }}
-        with:
-          submodules: recursive
-          clean: true
+        run: |
+          git submodule update --init --recursive
 
       - name: Login to registry
         shell: bash
