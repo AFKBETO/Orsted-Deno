@@ -10,9 +10,19 @@ services:
     image: ${REGISTRY_IMAGE}
     restart: always
     pull_policy: always
+    depends_on:
+      - dragonvault
 
-networks:
-  default:
-    external: true
-    name: nginx-network
-
+  dragonvault:
+    container_name: dragonvault
+    image: mongo:8.2.5
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_EXPORT_OUTPUT: /usr/share/output
+    ports:
+      - ${PORT}:27017
+    volumes:
+      - ${VOLUME_DIR}/data:/data/db
+      - ${VOLUME_DIR}/output:/usr/share/output

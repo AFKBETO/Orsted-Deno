@@ -78,8 +78,13 @@ jobs:
           ORSTED_BOT_TOKEN: ${{ secrets.ORSTED_BOT_TOKEN }}
           ORSTED_GUILD_ID: ${{ secrets.ORSTED_GUILD_ID }}
           ORSTED_ENVIRONMENT: production
+          PORT: ${{ secrets.PORT }}
+          VOLUME_DIR: ${{ secrets.VOLUME_DIR }}
+          MONGO_INITDB_ROOT_USERNAME: ${{ secrets.MONGO_INITDB_ROOT_USERNAME }}
+          MONGO_INITDB_ROOT_PASSWORD: ${{ secrets.MONGO_INITDB_ROOT_PASSWORD }}
           REGISTRY_IMAGE: ${{ needs.build.outputs.image_tag }}
         run: |
+          mkdir -p ${{ secrets.VOLUME_DIR }}/data
           docker compose up -d
 
       - name: Cleanup
