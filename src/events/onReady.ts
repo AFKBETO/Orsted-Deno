@@ -43,9 +43,8 @@ export async function onReady(client: Client): Promise<void> {
 
         console.log('Discord ready!');
         if (config.environment === 'production') {
-            await (client.channels.cache.get(looperId) as TextChannel).send(
-                `${client.user} has started another loop!`,
-            );
+			const orstedResetQuote = client.botConfig.orstedResetQuotes.randomItem();
+            await (client.channels.cache.get(looperId) as TextChannel).send(eval('`' + orstedResetQuote + '`'));
         } else {
             await (client.channels.cache.get(botDevId) as TextChannel).send(
                 `${client.user} has started another experiment!`,
