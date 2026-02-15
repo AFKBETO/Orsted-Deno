@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Message, PermissionFlagsBits } from 'discord.js';
 
 const twitterRegex =
     /(https:\/\/)(www\.){0,1}(x|twitter)\.com\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$/g;
@@ -38,11 +38,36 @@ export async function messageEmbedHandler(message: Message): Promise<void> {
             const linkString = redditLink[0];
             newLink = linkString.replace('reddit.com', 'rxddit.com');
         }
-        await message.reply({
+		const row = new ActionRowBuilder<ButtonBuilder>();
+		const deleteButton = new ButtonBuilder()
+			.setCustomId('delete')
+			.setLabel('Delete')
+			.setStyle(ButtonStyle.Danger);
+		row.addComponents(deleteButton);
+		const components: ActionRowBuilder<ButtonBuilder>[] = [row];
+        const newEmbedMsg = await message.reply({
             content: newLink,
             allowedMentions: { repliedUser: false },
+			components: components,
         });
-        await message.suppressEmbeds(true);
+		const collector = newEmbedMsg.createMessageComponentCollector({
+			componentType: ComponentType.Button,
+			time: 600000,
+		});
+		collector.on('collect', async (buttonInteraction: ButtonInteraction) => {
+			if (buttonInteraction.user.id !== message.author.id && !buttonInteraction.memberPermissions?.has(PermissionFlagsBits.ManageMessages)) {
+				await buttonInteraction.reply({
+					content: 'Only the original message\'s author can use this button.',
+					ephemeral: true,
+				});
+				return;
+			}
+			if (buttonInteraction.customId === 'delete') {
+				collector.stop();
+				await newEmbedMsg.delete();
+			}
+		});
+		await message.suppressEmbeds(true);
     } catch (error) {
         console.error(new Date(), 'Error in twitterEmbedHandler:', error);
     }
