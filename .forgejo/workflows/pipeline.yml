@@ -6,7 +6,7 @@ jobs:
     runs-on: docker
     outputs:
       image_tag: ${{ steps.build.outputs.image_tag }}
-      orsted_version: ${{ steps.prebuild.outputs.git_tag }}
+      orsted_version: ${{ steps.pre-build.outputs.git_tag }}
 
     steps:
       - name: Checkout the repository
