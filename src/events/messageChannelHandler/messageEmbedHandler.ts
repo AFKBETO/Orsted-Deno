@@ -6,6 +6,8 @@ const twitterRegex =
 const redditRegex =
     /(https:\/\/)((www|old)\.){0,1}reddit\.com\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$/g;
 
+const DELETE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
+
 export async function messageEmbedHandler(message: Message): Promise<void> {
     try {
         const { client } = message;
@@ -52,8 +54,9 @@ export async function messageEmbedHandler(message: Message): Promise<void> {
         });
 		const collector = newEmbedMsg.createMessageComponentCollector({
 			componentType: ComponentType.Button,
-			time: 600000,
+			time: DELETE_TIMEOUT,
 		});
+		let isNewEmbedMsgDeleted = false;
 		collector.on('collect', async (buttonInteraction: ButtonInteraction) => {
 			if (buttonInteraction.user.id !== message.author.id && !buttonInteraction.memberPermissions?.has(PermissionFlagsBits.ManageMessages)) {
 				await buttonInteraction.reply({
@@ -64,8 +67,13 @@ export async function messageEmbedHandler(message: Message): Promise<void> {
 			}
 			if (buttonInteraction.customId === 'delete') {
 				collector.stop();
+				isNewEmbedMsgDeleted = true;
 				await newEmbedMsg.delete();
 			}
+		});
+		collector.on('end', async () => {
+			if (isNewEmbedMsgDeleted) return;
+			await newEmbedMsg.edit({ components: [] });
 		});
 		await message.suppressEmbeds(true);
     } catch (error) {
