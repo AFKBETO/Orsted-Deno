@@ -3,7 +3,19 @@ All notable changes to this project will be documented in this file.
  
 The format is based on [Keep a Changelog](http://keepachangelog.com/) and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## [3.2.3] - 2025-04-22
+## [3.2.4] - 2026-02-17
+
+### Added
+
+### Changed
+
+- Replace delete button with reaction delete. Also implement this to some bot commands.
+
+- Remove timeout to delete messages.
+
+### Fixed
+
+## [3.2.3] - 2026-02-16
 
 ### Added
 
