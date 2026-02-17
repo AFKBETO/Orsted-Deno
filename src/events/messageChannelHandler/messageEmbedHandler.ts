@@ -1,4 +1,4 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonInteraction, ButtonStyle, ComponentType, Message, PermissionFlagsBits } from 'discord.js';
+import { Message } from 'discord.js';
 
 const twitterRegex =
     /(https:\/\/)(www\.){0,1}(x|twitter)\.com\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$/g;
@@ -6,7 +6,6 @@ const twitterRegex =
 const redditRegex =
     /(https:\/\/)((www|old)\.){0,1}reddit\.com\b([-a-zA-Z0-9@:%_\+.~#?&\/=]*)$/g;
 
-const DELETE_TIMEOUT = 10 * 60 * 1000; // 10 minutes
 
 export async function messageEmbedHandler(message: Message): Promise<void> {
     try {
@@ -40,42 +39,25 @@ export async function messageEmbedHandler(message: Message): Promise<void> {
             const linkString = redditLink[0];
             newLink = linkString.replace('reddit.com', 'rxddit.com');
         }
-		const row = new ActionRowBuilder<ButtonBuilder>();
-		const deleteButton = new ButtonBuilder()
-			.setCustomId('delete')
-			.setLabel('Delete')
-			.setStyle(ButtonStyle.Danger);
-		row.addComponents(deleteButton);
-		const components: ActionRowBuilder<ButtonBuilder>[] = [row];
         const newEmbedMsg = await message.reply({
             content: newLink,
             allowedMentions: { repliedUser: false },
-			components: components,
         });
-		const collector = newEmbedMsg.createMessageComponentCollector({
-			componentType: ComponentType.Button,
-			time: DELETE_TIMEOUT,
-		});
-		let isNewEmbedMsgDeleted = false;
-		collector.on('collect', async (buttonInteraction: ButtonInteraction) => {
-			if (buttonInteraction.user.id !== message.author.id && !buttonInteraction.memberPermissions?.has(PermissionFlagsBits.ManageMessages)) {
-				await buttonInteraction.reply({
-					content: 'Only the original message\'s author can use this button.',
-					ephemeral: true,
-				});
-				return;
+		let counter = 0;
+		const interval = setInterval(async() => {
+			const embeds = (await newEmbedMsg.fetch()).embeds;
+			if (embeds.length > 0) {
+				await message.suppressEmbeds(true);
+				await newEmbedMsg.react('🗑️');
+				clearInterval(interval);
+			} else {
+				counter++;
+				if (counter >= 25) {
+					await newEmbedMsg.delete();
+					clearInterval(interval);
+				}
 			}
-			if (buttonInteraction.customId === 'delete') {
-				collector.stop();
-				isNewEmbedMsgDeleted = true;
-				await newEmbedMsg.delete();
-			}
-		});
-		collector.on('end', async () => {
-			if (isNewEmbedMsgDeleted) return;
-			await newEmbedMsg.edit({ components: [] });
-		});
-		await message.suppressEmbeds(true);
+		}, 200);
     } catch (error) {
         console.error(new Date(), 'Error in twitterEmbedHandler:', error);
     }

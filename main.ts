@@ -5,7 +5,7 @@ import { intents } from './config/intentOptions.ts';
 import { partials } from './config/partialOptions.ts';
 import { onReady } from './src/events/onReady.ts';
 import { onInteraction } from './src/events/onInteraction.ts';
-import { onReactionAdd } from './src/events/onReactionAdd.ts';
+import { onReaction } from './src/events/onReaction.ts';
 import { onInviteCreate } from './src/events/onInviteCreate.ts';
 import { onGuildMemberAdd } from './src/events/onGuildMemberAdd.ts';
 import { onMessageCreate } from './src/events/onMessageCreate.ts';
@@ -44,7 +44,8 @@ if (import.meta.main) {
     }
     client.once(Events.ClientReady, onReady);
     client.on(Events.InteractionCreate, onInteraction);
-    client.on(Events.MessageReactionAdd, onReactionAdd);
+    client.on(Events.MessageReactionAdd, onReaction);
+	client.on(Events.MessageReactionRemove, onReaction);
     client.on(Events.MessageCreate, onMessageCreate);
     client.on(Events.InviteCreate, onInviteCreate);
     client.on(
