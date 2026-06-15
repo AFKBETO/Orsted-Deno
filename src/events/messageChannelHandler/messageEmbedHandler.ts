@@ -21,7 +21,7 @@ export async function messageEmbedHandler(message: Message): Promise<void> {
 
         const twitterLink = messageContent.match(twitterRegex);
         const redditLink = messageContent.match(redditRegex);
-        if (redditLink === null && twitterLink === null) {
+        if (/*redditLink === null && */twitterLink === null) {
             return;
         }
 
